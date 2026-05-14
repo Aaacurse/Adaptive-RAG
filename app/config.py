@@ -1,0 +1,25 @@
+from pydantic_settings import BaseSettings
+from functools import lru_cache
+
+class Settings(BaseSettings):
+    groq_api_key:str
+    tavily_api_key:str
+    chroma_persist_path:str="./chroma_db"
+    classifier_model: str = "llama-3.1-8b-instant"
+    grader_model: str = "llama-3.1-8b-instant"
+    generator_model: str = "llama-3.1-70b-versatile"
+    top_k:int=5
+    chunk_size:int=800
+    chunk_overlap:int=100
+    high_relevance_threshold:float=0.7
+    low_relevance_threshold:float=0.3
+    max_iterations:int=2
+    cors_origins:list[str]=["https://localhost:3000"]
+    
+    
+    class Config:
+        env_file=".env"
+        
+@lru_cache()
+def get_settings():
+    return Settings()
