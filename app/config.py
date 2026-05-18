@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     chroma_persist_path:str="./chroma_db"
     classifier_model: str = "llama-3.1-8b-instant"
     grader_model: str = "llama-3.1-8b-instant"
-    generator_model: str = "llama-3.1-70b-versatile"
+    generator_model: str = "llama-3.3-70b-versatile"
     top_k:int=5
     chunk_size:int=800
     chunk_overlap:int=100
