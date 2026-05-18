@@ -8,5 +8,5 @@ def retriever(state:RAGState):
     
     results=similarity_search(query,top_k)
     
-    return {"documents":results}
+    return {"documents": results, "route_taken": "vector"}
     

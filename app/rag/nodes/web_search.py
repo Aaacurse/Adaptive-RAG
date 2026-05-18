@@ -14,4 +14,4 @@ def web_search(state:RAGState):
         {"text":r['content'],"metadata":{"source":r["url"]}} for r in results["results"]
     ]
     
-    return {"web_results":formatted_results}
+    return {"web_results": formatted_results, "route_taken": "web"}

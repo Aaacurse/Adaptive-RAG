@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     chunk_size:int=300
     chunk_overlap:int=50
     high_relevance_threshold:float=0.7
-    low_relevance_threshold:float=0.3
+    low_relevance_threshold:float=0.15
     max_iterations:int=2
     cors_origins:list[str]=["https://localhost:3000"]
     

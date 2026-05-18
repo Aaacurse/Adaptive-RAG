@@ -30,7 +30,7 @@ def grader(state:RAGState):
     """) for doc in documents]
     
     scores=[r.score for r in result_scores]
-    avg_relevance=sum(scores)/len(scores) if scores else 0.0
+    avg_relevance = sum(sorted(scores, reverse=True)[:2]) / 2 if scores else 0.0
     
     threshold=get_settings().low_relevance_threshold
     
