@@ -9,8 +9,8 @@ class Settings(BaseSettings):
     grader_model: str = "llama-3.1-8b-instant"
     generator_model: str = "llama-3.3-70b-versatile"
     top_k:int=5
-    chunk_size:int=800
-    chunk_overlap:int=100
+    chunk_size:int=300
+    chunk_overlap:int=50
     high_relevance_threshold:float=0.7
     low_relevance_threshold:float=0.3
     max_iterations:int=2
