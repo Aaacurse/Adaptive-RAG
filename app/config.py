@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     high_relevance_threshold:float=0.7
     low_relevance_threshold:float=0.15
     max_iterations:int=2
-    cors_origins:list[str]=["https://localhost:3000"]
+    cors_origins:list[str]=["http://localhost:3000","http://localhost:5173"]
     
     
     class Config:
