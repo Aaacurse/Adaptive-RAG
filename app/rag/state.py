@@ -9,3 +9,4 @@ class RAGState(TypedDict):
     answer:Optional[str]
     route_taken:Optional[Literal["direct","vector","web"]]
     iterations:int
+    chat_history:Optional[list[dict]]

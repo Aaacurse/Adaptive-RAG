@@ -1,16 +1,16 @@
 from langchain_groq import ChatGroq
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from app.rag.state import RAGState
 from app.config import get_settings
 
 llm=ChatGroq(
-    model=get_settings().grader_model,
+    model=get_settings().generator_model,
     api_key=get_settings().groq_api_key,
     temperature=0)
 
 class HallucinationCheck(BaseModel):
-    is_grounded:bool
-    reason:str
+    is_grounded:bool=Field(description="Must be a JSON boolean true or false and not a string")
+    reason:str=Field(description="Give the reason to support 'why you gave the is_grounded value true or false?'")
         
 structured_llm=llm.with_structured_output(HallucinationCheck)
 

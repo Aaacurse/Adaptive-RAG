@@ -221,6 +221,8 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const bottomRef = useRef();
+  const [chatHistory, setChatHistory] = useState([]);
+
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -236,11 +238,16 @@ export default function App() {
       const res = await fetch(`${API}/query`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, chat_history: chatHistory })
       });
       const data = await res.json();
       const hasWarning = data.answer?.includes("Warning:");
       const cleanAnswer = data.answer?.replace(/\n\n.*Warning:.*$/, "").trim();
+      setChatHistory(prev => [
+        ...prev,
+        { role: "user", content: query },
+        { role: "assistant", content: cleanAnswer }
+      ])
       setMessages((prev) => [
         ...prev,
         {
