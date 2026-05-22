@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import Field
 from functools import lru_cache
 
 class Settings(BaseSettings):
@@ -15,6 +16,7 @@ class Settings(BaseSettings):
     low_relevance_threshold:float=0.15
     max_iterations:int=2
     cors_origins:list[str]=["http://localhost:3000","http://localhost:5173"]
+    database_url:str=Field(...,env='DATABASE_URL')
     
     
     class Config:

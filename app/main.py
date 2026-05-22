@@ -8,8 +8,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.ingest import router as ingest_router
 from app.api.query import router as query_router
 
+from app.db.database import create_tables
+
 @asynccontextmanager
 async def lifecycle(app:FastAPI):
+    await create_tables()
     app.state.rag=RAGGraph()
     yield
     

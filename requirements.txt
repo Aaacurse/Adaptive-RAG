@@ -10,3 +10,7 @@ sentence-transformers==5.4.1
 tavily-python==0.7.24 
 pydantic-settings==2.14.1
 pypdf==5.9.0
+sqlalchemy 
+asyncpg 
+psycopg2-binary 
+alembic
