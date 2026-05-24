@@ -1,17 +1,27 @@
 from pydantic import BaseModel
 from fastapi import Request,APIRouter
 from app.rag.state import RAGState
+import uuid
+from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Depends
+from app.db.database import get_db
+from app.db import crud
 
 router=APIRouter()
 
 class QueryRequest(BaseModel):
     query:str
+    chat_id:uuid.UUID
     chat_history:list[dict]=[]
     
 @router.post('/query')
-async def query(request:Request,body:QueryRequest):
+async def query(request:Request,body:QueryRequest,db:AsyncSession=Depends(get_db)):
     rag=request.app.state.rag
     result=rag.graph.invoke({"query":body.query,"iterations":0,'chat_history':trim_history(body.chat_history)})
+    
+    await crud.add_message(db,body.chat_id,"user",body.query)
+    await crud.add_message(db,body.chat_id,"assistant",result.get('answer'),result.get('route_taken'),result.get('avg_relevance')
+    )
     
     return {
         "answer":result.get('answer'),

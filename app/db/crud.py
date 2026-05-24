@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select,desc,update
+from sqlalchemy.orm import selectinload
 from app.db.models import Chat,Message
 from datetime import datetime,timezone
 import uuid
@@ -19,7 +20,7 @@ async def get_chats(db:AsyncSession)->list[Chat]:
 
 async def get_chat(db:AsyncSession,chat_id:uuid.UUID)->Chat:
     result=await db.execute(
-        select(Chat).where(Chat.id==chat_id)
+        select(Chat).options(selectinload(Chat.messages)).where(Chat.id==chat_id)
     )
     return result.scalar_one_or_none()
 
