@@ -4,17 +4,12 @@ from pydantic import BaseModel,EmailStr
 from app.db.database import get_db
 from app.db.crud import create_user,get_user_by_email
 from app.core.security import verify_password,create_access_token
-from app.db.models import User
-from sqlalchemy import select
 from fastapi.security import OAuth2PasswordRequestForm
 
 class RegisterRequest(BaseModel):
     email:EmailStr
     password:str
-    
-class LoginRequest(BaseModel):
-    email:EmailStr
-    password:str
+
     
 router=APIRouter()
 

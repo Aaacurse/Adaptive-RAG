@@ -28,6 +28,8 @@ async def get_chat_by_id(chat_id:uuid.UUID,db:AsyncSession=Depends(get_db),curre
     chat=await crud.get_chat(db,chat_id)
     if not chat:
         raise HTTPException(status_code=404,detail='Chat not found')
+    if chat.user_id!=current_user.id:
+        raise HTTPException(status_code=403,detail="Access Denied")
     return chat
 
 @router.delete('/chats/{chat_id}')
@@ -35,6 +37,8 @@ async def delete_chat(chat_id:uuid.UUID,db:AsyncSession=Depends(get_db),current_
     chat=await crud.get_chat(db,chat_id)
     if not chat:
         raise HTTPException(status_code=404,detail='Chat not found')
+    if chat.user_id!=current_user.id:
+        raise HTTPException(status_code=403,detail="Access Denied")
     await crud.delete_chat(db,chat_id)
     return JSONResponse(content={"message": "Chat Deleted"},status_code=200)
 
@@ -43,6 +47,8 @@ async def update_chat_title(chat_id:uuid.UUID,body:UpdateTitleRequest,db:AsyncSe
     chat=await crud.get_chat(db,chat_id)
     if not chat:
         raise HTTPException(status_code=404,detail="Chat not found")
+    if chat.user_id!=current_user.id:
+        raise HTTPException(status_code=403,detail="Access Denied")
     updated=await crud.update_chat_title(db,chat_id,body.title)
     return updated
     
