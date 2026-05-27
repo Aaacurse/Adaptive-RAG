@@ -6,6 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
 from app.db.database import get_db
 from app.db import crud
+from app.db.models import User
+from app.core.security import get_current_user
 
 router=APIRouter()
 
@@ -15,7 +17,7 @@ class QueryRequest(BaseModel):
     chat_history:list[dict]=[]
     
 @router.post('/query')
-async def query(request:Request,body:QueryRequest,db:AsyncSession=Depends(get_db)):
+async def query(request:Request,body:QueryRequest,db:AsyncSession=Depends(get_db),current_user:User=Depends(get_current_user)):
     rag=request.app.state.rag
     result=rag.graph.invoke({"query":body.query,"iterations":0,'chat_history':trim_history(body.chat_history)})
     

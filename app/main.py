@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.ingest import router as ingest_router
 from app.api.query import router as query_router
 from app.api.chats import router as chats_router
+from app.api.auth import router as auth_router
 
 from app.db.database import create_tables
 
@@ -23,7 +24,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=get_settings().cors_origins,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
+    allow_credentials=True
     )
 
 @app.get('/health')
@@ -33,3 +35,4 @@ def health():
 app.include_router(ingest_router)
 app.include_router(query_router)
 app.include_router(chats_router)
+app.include_router(auth_router)

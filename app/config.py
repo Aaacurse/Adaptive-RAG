@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     max_iterations:int=2
     cors_origins:list[str]=["http://localhost:3000","http://localhost:5173"]
     database_url:str=Field(...,env='DATABASE_URL')
+    secret_key:str=Field(...,env='SECRET_KEY')
+    algorithm:str="HS256"
     
     
     class Config:
