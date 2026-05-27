@@ -6,6 +6,17 @@ from app.rag.nodes.generator import generator
 from app.rag.nodes.web_search import web_search
 from app.rag.nodes.hallucination_check import hallucination_check
 from app.config import get_settings
+from app.config import CONVERSATIONAL_PHRASES
+
+def is_conversational(state: RAGState) -> str:
+    query = state['query'].lower().strip()
+    if query in CONVERSATIONAL_PHRASES:
+        return "direct"
+    words = query.split()
+    if len(words) <= 2 and all(w in " ".join(CONVERSATIONAL_PHRASES) for w in words):
+        return "direct"
+    
+    return "retriever"
 
 
 def merge_context(state:RAGState)->dict:
@@ -39,7 +50,11 @@ class RAGGraph:
         workflow.add_node('merge_context',merge_context)
         
         #add edges
-        workflow.add_edge(START,'retriever')
+        workflow.add_conditional_edges(START,is_conversational,
+        {
+            "direct": "generator", 
+            "retriever": "retriever"
+        })
         workflow.add_edge('retriever','grader')
         workflow.add_conditional_edges('grader',route_after_grader,{
             'generator':'merge_context',

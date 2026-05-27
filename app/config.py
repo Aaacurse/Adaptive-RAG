@@ -22,6 +22,28 @@ class Settings(BaseSettings):
     class Config:
         env_file=".env"
         
+CONVERSATIONAL_PHRASES = {
+    "thank you", "thanks", "thanks a lot", "thank you so much",
+    "ok", "okay", "okayy", "kk", "k",
+    "got it", "understood", "i understand", "makes sense",
+    "great", "nice", "cool", "awesome", "perfect",
+    "sure", "alright", "fine", "sounds good",
+    "bye", "goodbye", "see you", "take care",
+    "hello", "hi", "hey", "heyy", "yo",
+    "good morning", "good afternoon", "good evening",
+    "welcome", "no problem", "all good",
+    "yep", "yeah", "yup", "nah", "nope",
+    "lol", "haha", "hehe",
+    "hmm", "hmmm", "uhh", "huh",
+    "please", "sure thing", "of course",
+    "that's fine", "works for me",
+    "i see", "right", "true", "exactly",
+    "my bad", "sorry", "no worries",
+    "can you help", "help me",
+    "what do you mean", "explain",
+    "one more thing", "wait", "hold on"
+}
+        
 @lru_cache()
 def get_settings():
     return Settings()
