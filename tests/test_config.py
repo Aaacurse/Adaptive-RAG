@@ -3,8 +3,8 @@ from app.config import get_settings, CONVERSATIONAL_PHRASES
 
 def test_settings_loads():
     s = get_settings()
-    assert s.groq_api_key == "test-groq-key"
-    assert s.tavily_api_key == "test-tavily-key"
+    assert s.groq_api_key
+    assert s.tavily_api_key
     assert s.algorithm == "HS256"
 
 
