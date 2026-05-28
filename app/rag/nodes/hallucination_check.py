@@ -14,11 +14,15 @@ class HallucinationCheck(BaseModel):
         
 structured_llm=llm.with_structured_output(HallucinationCheck)
 
-def hallucination_check(state:RAGState):
-    answer=state['answer']
-    final_context=state['final_context']
-    context=" ".join(final_context).strip()
-    checker_prompt=f"""You are a fact checker.
+def hallucination_check(state: RAGState):
+    answer = state['answer']
+    final_context = state.get('final_context') or []
+    context = " ".join(final_context).strip()
+
+    if not context:
+        return {"answer": answer}
+
+    checker_prompt = f"""You are a fact checker.
     Context:
     {context}
 
@@ -27,12 +31,12 @@ def hallucination_check(state:RAGState):
 
     Is this answer fully supported by the context above?
     Return is_grounded as true if yes, false if the answer contains claims not in the context."""
-    check=structured_llm.invoke(checker_prompt)
+    
+    check = structured_llm.invoke(checker_prompt)
     
     if check.is_grounded:
-        return {"answer":answer}
+        return {"answer": answer}
     
-    return {"answer": answer+"\n\n Warning: this answer may contain unverified claims."}
-    
+    return {"answer": answer + "\n\nWarning: this answer may contain unverified claims."}
     
     
