@@ -40,6 +40,14 @@ jobs:
           python -m pip install uv
           uv pip install --system -r requirements.txt
           
+      - name: Lint with ruff
+        run: ruff check app/
 
-      - name: Run tests
-        run: pytest tests/ -v
+      - name: Check formatting
+        run: ruff format app/ --check
+
+      - name: Type check with mypy
+        run: myppy app/
+
+      - name: Run tests with coverage
+        run: pytest tests/ -v --cov --cov-report=term-missing
