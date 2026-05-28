@@ -1,43 +1,45 @@
-
 from langchain_groq import ChatGroq
+from pydantic import BaseModel
+
 from app.config import get_settings
 from app.rag.state import RAGState
-from pydantic import BaseModel
 
 
 class RelevanceScore(BaseModel):
-    score:float
+    score: float
 
-llm=ChatGroq(
+
+llm = ChatGroq(
     model=get_settings().grader_model,
     api_key=get_settings().groq_api_key,
-    temperature=0)
+    temperature=0,
+)
 
-structured_llm=llm.with_structured_output(RelevanceScore)
+structured_llm = llm.with_structured_output(RelevanceScore)
 
-def grader(state:RAGState):
-    query=state['query']
-    documents=state['documents']
-    result_scores=[structured_llm.invoke(f"""
+
+def grader(state: RAGState):
+    query = state["query"]
+    documents = state["documents"]
+    result_scores = [
+        structured_llm.invoke(f"""
     You are a relevance grader.
     Given this question: {query}
-    And this document chunk: {doc['text']}
+    And this document chunk: {doc["text"]}
     Score how relevant this document is for answering the question.
     0.0 = completely irrelevant
     0.5 = partially relevant  
     1.0 = directly answers the question
     Be strict. Only give high scores if the document clearly helps answer the question.
-    """) for doc in documents]
-    
-    scores=[r.score for r in result_scores]
-    avg_relevance = sum(sorted(scores, reverse=True)[:2]) / 2 if scores else 0.0
-    
-    threshold=get_settings().low_relevance_threshold
-    
-    filtered_docs=[
-        doc for doc,score in zip(documents,scores) if score>threshold
+    """)
+        for doc in documents
     ]
-    
-    return {"documents":filtered_docs,"avg_relevance":avg_relevance}
 
-    
+    scores = [r.score for r in result_scores]
+    avg_relevance = sum(sorted(scores, reverse=True)[:2]) / 2 if scores else 0.0
+
+    threshold = get_settings().low_relevance_threshold
+
+    filtered_docs = [doc for doc, score in zip(documents, scores) if score > threshold]
+
+    return {"documents": filtered_docs, "avg_relevance": avg_relevance}

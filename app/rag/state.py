@@ -1,12 +1,13 @@
-from typing import TypedDict,Literal,Optional
+from typing import Literal, TypedDict
+
 
 class RAGState(TypedDict):
-    query:str
-    documents:Optional[list[dict]]
-    avg_relevance:Optional[float]
-    web_results:Optional[list[dict]]
-    final_context:Optional[list[str]]
-    answer:Optional[str]
-    route_taken:Optional[Literal["direct","vector","web"]]
-    iterations:int
-    chat_history:Optional[list[dict]]
+    query: str
+    documents: list[dict] | None
+    avg_relevance: float | None
+    web_results: list[dict] | None
+    final_context: list[str] | None
+    answer: str | None
+    route_taken: Literal["direct", "vector", "web"] | None
+    iterations: int
+    chat_history: list[dict] | None
