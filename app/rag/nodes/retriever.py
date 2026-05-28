@@ -15,7 +15,7 @@ def retriever(state:RAGState):
         enriched_query
     top_k=get_settings().top_k
     
-    results=similarity_search(query,top_k)
+    results=similarity_search(enriched_query,top_k)
     
     return {"documents": results, "route_taken": "vector"}
     

@@ -1,5 +1,5 @@
 from passlib.context import CryptContext
-from jose import jwt
+from jose import jwt,ExpiredSignatureError,JWTError
 from datetime import datetime,timedelta,timezone
 from fastapi import HTTPException
 from app.config import get_settings
@@ -23,17 +23,22 @@ def verify_password(plain:str,hashed:str)->bool:
     return pwd_context.verify(plain,hashed)
 
 def create_access_token(data:dict)->str:
+    settings=get_settings()
     to_encode=data.copy()
     expire=datetime.now(timezone.utc)+timedelta(minutes=1440)
     to_encode['exp']=expire
-    return jwt.encode(to_encode,SECRET_KEY,algorithm=ALGORITHM)
+    return jwt.encode(to_encode,settings.secret_key,algorithm=settings.algorithm)
 
 def verify_token(token:str)->dict:
+    settings=get_settings()
     try:
-        payload=jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        payload=jwt.decode(token,settings.secret_key,algorithms=[settings.algorithm])
         return payload
-    except:
-        raise HTTPException(status_code=401,detail='Invalid token')
+    except  ExpiredSignatureError:
+        raise HTTPException(status_code=401,detail='Token has expired. Please log in again.')
+    except JWTError:
+        raise HTTPException(status_code=401,detail='Invalid Token.')
+    
     
 async def get_current_user(token:str=Depends(oauth2_scheme),db:AsyncSession=Depends(get_db)):
     payload=verify_token(token)
