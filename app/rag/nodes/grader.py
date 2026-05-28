@@ -28,7 +28,7 @@ def grader(state: RAGState):
     And this document chunk: {doc["text"]}
     Score how relevant this document is for answering the question.
     0.0 = completely irrelevant
-    0.5 = partially relevant  
+    0.5 = partially relevant
     1.0 = directly answers the question
     Be strict. Only give high scores if the document clearly helps answer the question.
     """)
