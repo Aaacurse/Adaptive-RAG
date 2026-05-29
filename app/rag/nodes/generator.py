@@ -1,4 +1,4 @@
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage,BaseMessage
 from langchain_groq import ChatGroq
 
 from app.config import get_settings
@@ -27,7 +27,7 @@ def generator(state: RAGState):
     else:
         system_prompt = "You are a helpful assistant. Answer the user's message naturally and concisely."
 
-    messages = [SystemMessage(content=system_prompt)]
+    messages:list[BaseMessage] = [SystemMessage(content=system_prompt)]
 
     for m in history:
         if m["role"] == "user":

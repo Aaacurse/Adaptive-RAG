@@ -53,7 +53,7 @@ async def query(
 
 def trim_history(history: list[dict], max_tokens: int = 500) -> list[dict]:
     total = 0
-    trimmed = []
+    trimmed :list[dict]=[]
     for msg in reversed(history):
         estimated_tokens = len(msg["content"]) // 4
         if total + estimated_tokens > max_tokens:

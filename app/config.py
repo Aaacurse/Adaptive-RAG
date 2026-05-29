@@ -1,7 +1,7 @@
 from functools import lru_cache
 
 from pydantic import Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings,SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -18,14 +18,13 @@ class Settings(BaseSettings):
     low_relevance_threshold: float = 0.15
     max_iterations: int = 2
     cors_origins: list[str] = ["http://localhost:3000", "http://localhost:5173"]
-    database_url: str = Field(..., env="DATABASE_URL")
-    secret_key: str = Field(..., env="SECRET_KEY")
+    database_url: str
+    secret_key: str 
     algorithm: str = "HS256"
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        env_nested_delimiter = "__"
+    model_config=SettingsConfigDict(
+        env_file=".env"
+    )
 
     @classmethod
     def settings_customise_sources(

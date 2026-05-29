@@ -1,5 +1,6 @@
 from langchain_groq import ChatGroq
 from pydantic import BaseModel
+from typing import cast
 
 from app.config import get_settings
 from app.rag.state import RAGState
@@ -20,8 +21,9 @@ structured_llm = llm.with_structured_output(RelevanceScore)
 
 def grader(state: RAGState):
     query = state["query"]
-    documents = state["documents"]
-    result_scores = [
+    documents = state.get('documents') or []
+    result_scores:list[RelevanceScore] = [
+        cast(RelevanceScore,
         structured_llm.invoke(f"""
     You are a relevance grader.
     Given this question: {query}
@@ -32,6 +34,7 @@ def grader(state: RAGState):
     1.0 = directly answers the question
     Be strict. Only give high scores if the document clearly helps answer the question.
     """)
+    )
         for doc in documents
     ]
 
@@ -40,6 +43,6 @@ def grader(state: RAGState):
 
     threshold = get_settings().low_relevance_threshold
 
-    filtered_docs = [doc for doc, score in zip(documents, scores) if score > threshold]
+    filtered_docs = [doc for doc, score in zip(documents or [], scores) if score > threshold]
 
     return {"documents": filtered_docs, "avg_relevance": avg_relevance}

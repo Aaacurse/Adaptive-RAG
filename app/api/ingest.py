@@ -36,7 +36,7 @@ async def ingest(
 async def extract_text(file: UploadFile):
     content = await file.read()
 
-    if file.filename.endswith(".pdf"):
+    if file.filename and file.filename.endswith(".pdf"):
         pdf = pypdf.PdfReader(io.BytesIO(content))
 
         return "\n".join(page.extract_text() for page in pdf.pages)
