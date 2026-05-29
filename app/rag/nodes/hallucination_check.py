@@ -1,6 +1,7 @@
+from typing import cast
+
 from langchain_groq import ChatGroq
 from pydantic import BaseModel, Field
-from typing import cast
 
 from app.config import get_settings
 from app.rag.state import RAGState
@@ -42,7 +43,7 @@ def hallucination_check(state: RAGState):
     Is this answer fully supported by the context above?
     Return is_grounded as true if yes, false if the answer contains claims not in the context."""
 
-    check = cast(HallucinationCheck,structured_llm.invoke(checker_prompt))
+    check = cast(HallucinationCheck, structured_llm.invoke(checker_prompt))
 
     if check.is_grounded:
         return {"answer": answer}

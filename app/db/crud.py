@@ -27,14 +27,16 @@ async def get_chats(db: AsyncSession, user_id: uuid.UUID) -> list[Chat]:
     return list(result.scalars().all())
 
 
-async def get_chat(db: AsyncSession, chat_id: uuid.UUID) -> Chat|None:
+async def get_chat(db: AsyncSession, chat_id: uuid.UUID) -> Chat | None:
     result = await db.execute(
         select(Chat).options(selectinload(Chat.messages)).where(Chat.id == chat_id)
     )
     return result.scalar_one_or_none()
 
 
-async def update_chat_title(db: AsyncSession, chat_id: uuid.UUID, title: str) -> Chat|None:
+async def update_chat_title(
+    db: AsyncSession, chat_id: uuid.UUID, title: str
+) -> Chat | None:
     chat = await get_chat(db, chat_id)
     if chat is None:
         return None
@@ -56,8 +58,8 @@ async def add_message(
     chat_id: uuid.UUID,
     role: str,
     content: str,
-    route_taken: str|None = None,
-    avg_relevance: float|None = None,
+    route_taken: str | None = None,
+    avg_relevance: float | None = None,
 ) -> Message:
     message = Message(
         chat_id=chat_id,
